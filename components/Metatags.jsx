@@ -1,4 +1,3 @@
-import { functionsIn } from 'lodash';
 import Head from 'next/head';
 
 export default function MetaTags({

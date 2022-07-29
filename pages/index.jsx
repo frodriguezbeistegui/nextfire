@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Loader from '../components/Loader';
-import PostsFeed from '../components/PostsFeed';
+import PostFeed from '../components/PostFeed';
 import { firestore, postToJSON, fromMillis } from '../lib/firebase';
 
 const LIMIT = 1;
@@ -14,7 +14,9 @@ export const getServerSideProps = async (context) => {
   const posts = (await postsQuery.get()).docs.map(postToJSON);
 
   return {
-    props: {posts},
+    props: {
+      posts,
+    },
   };
 };
 
@@ -46,7 +48,7 @@ export default function Home(props) {
 
   return (
     <main>
-      <PostsFeed posts={posts} />
+      <PostFeed posts={posts} />
       {!loading && !postsEnd && <button onClick={getMorePosts}>Load more</button>}
       <Loader show={loading} />
       {postsEnd && 'You have reached the end!'}
