@@ -72,28 +72,36 @@ function UsernameForm() {
   );
 
   const onSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const userDoc = firebase.doc(`users/${user.uid}`)
-    const usernameDoc = firebase.doc(`usernames/${formValue}`)
+    const userDoc = firestore.doc(`users/${user.uid}`);
+    const usernameDoc = firestore.doc(`usernames/${formValue}`);
 
     const batch = firestore.batch();
-    batch.set(userDoc, {username: formValue, photoURL: user.photoURL, displayName: user.displayName});
-    batch.set(usernameDoc, {uid: user.uid})
-  }
+    batch.set(userDoc, {
+      username: formValue,
+      photoURL: user.photoURL,
+      displayName: user.displayName,
+    });
+    batch.set(usernameDoc, { uid: user.uid });
+
+    await batch.commit();
+  };
 
   return (
     !username && (
       <section>
         <h3>Choose Username</h3>
-        <form onSubmit={onSubmit} >
+        <form onSubmit={onSubmit} autoComplete='off'>
           <input
             type="text"
             name="username"
             placeholder="username"
             value={formValue}
             onChange={onChange}
+            autoComplete='false'
           />
+          <UsernameMessage username={formValue} isValid={isValid} loading={loading} />
           <button className="btn-green" type="submit" disbled={!isValid}>
             Choose
           </button>
@@ -110,4 +118,16 @@ function UsernameForm() {
       </section>
     )
   );
+}
+
+function UsernameMessage({username, isValid, loading}){
+  if(loading){
+    return <p>Checking...</p>
+  }else if(isValid){
+    return <p className="text-success">{username} is available!</p>
+  }else if(username && !isValid) {
+    return <p className="text-danger">That username is taken!</p>
+  }else{
+    return <p></p>
+  }
 }

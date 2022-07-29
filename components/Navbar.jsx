@@ -13,7 +13,7 @@ export default function Navbar() {
             <button className="btn-logo">FEED</button>
           </Link>
         </li>
-
+        
         {/* user is signed-in and has username */}
         {username && (
           <>
@@ -24,7 +24,7 @@ export default function Navbar() {
             </li>
             <li>
               <Link href={`/${username}`}>
-                <img src={user?.photoURL} alt={username} />
+                <img src={user?.photoURL || '/hacker.png'} alt={username} />
               </Link>
             </li>
           </>
