@@ -13,6 +13,8 @@ export const getServerSideProps = async (context) => {
 
   const posts = (await postsQuery.get()).docs.map(postToJSON);
 
+  console.log(posts);
+
   return {
     props: {
       posts,
@@ -33,17 +35,19 @@ export default function Home(props) {
     const query = firestore
       .collectionGroup('posts')
       .where('published', '==', true)
-      .orderBy('CreatedAt', 'desc')
+      .orderBy('createdAt', 'desc')
       .startAfter(cursor)
       .limit(LIMIT);
 
     const newPosts = (await query.get()).docs.map((doc) => doc.data());
+    console.log(newPosts);
+    console.log(cursor);
 
     setposts(posts.concat(newPosts));
-
     if (newPosts.length < LIMIT) {
       setPostsEnd(true);
     }
+    setLoading(false)
   };
 
   return (
